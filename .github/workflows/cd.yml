@@ -30,7 +30,7 @@ jobs:
     environment: prod  # GitHub environment holding the prod secrets (approvals optional)
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Deploy bundle
         uses: ./.github/actions/cd
