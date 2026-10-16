@@ -1,10 +1,12 @@
 name: CI
 
-# Quality gate for every pull request into main. Branch protection requires this workflow,
-# so nothing reaches main (and therefore prod) without passing it.
+# Quality gate. Runs on every pull request into main, and is also called by CD before every
+# prod deploy (`workflow_call`). Branch protection can't be enforced on a free private repo, so
+# the deploy itself is the gate: nothing reaches prod without passing these checks.
 on:
   pull_request:
     branches: [main]
+  workflow_call:
 
 permissions:
   contents: read
@@ -32,13 +34,11 @@ jobs:
       - name: Install development environment from uv.lock
         run: uv sync --frozen
 
-      - name: Lint, format, types, docstrings
-        run: |
-          set -e
-          uv run ruff check --output-format=github .
-          uv run ruff format --check .
-          uv run ty check --output-format=github .
-          uv run pydoclint .
+      # Run exactly the hooks developers run locally (.pre-commit-config.yaml): one definition of
+      # "clean", so local and CI checks can't drift (they did: `ruff format --check .` in CI also
+      # formatted Markdown code blocks, which the local hook never looked at).
+      - name: Pre-commit hooks (ruff, ruff-format, ty, pydoclint, hygiene)
+        run: uv run prek run --all-files --show-diff-on-failure
 
       - name: Build and validate package
         run: |

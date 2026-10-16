@@ -71,6 +71,9 @@
 | Dashboard key | `airbnb_renting` | `airbnb_renting_dashboard` | Resource keys must be unique across *all* resource types |
 | Local scripts | `uv run python scratch/…` | `just scratch <name>` (`uv run --no-editable`) | uv marks `.venv` hidden on macOS; Python 3.12.4 skips hidden `.pth` files, so editable installs aren't importable |
 | `gold won't refresh on bad data` (Decision 6) | claimed | **Not guaranteed**: gold MVs read silver in parallel with `dq_uniqueness`; the *update* fails, but MVs already refreshed in it stay | Documented honestly; enforcing order would need gold to depend on `dq_uniqueness` |
+| Branch protection (Decision 13, AT-024) | Ruleset requiring the `ci` check on `main` | Ruleset created but **not enforced**: GitHub Free doesn't enforce rulesets/branch protection on private repos. Technical control instead: CD calls CI (`workflow_call`) and `deploy_prod` `needs: ci`, so nothing deploys to prod unless CI passes on that commit | Platform limitation; the deploy is the gate. Enforced merge-blocking needs GitHub Pro/Team or a public repo |
+| CI lint step | separate ruff/ty/pydoclint commands | `uv run prek run --all-files` | CI's `ruff format --check .` also formatted Markdown code blocks, which the local hook didn't: one definition of clean |
+| CI identity | SP (fallback PAT) | SP `github-actions-airbnb` (OAuth M2M), least-privilege grants; prod `root_path` in the SP's folder + `run_as` the SP | `/Workspace/Shared` would be writable by all users |
 | Kamernet-only PC4s in dashboard | (not designed) | 4 rows without an Airbnb scenario are excluded by the scenario filter; stated in the subtitle | Dashboard filters drop NULL-scenario rows |
 
 ---
