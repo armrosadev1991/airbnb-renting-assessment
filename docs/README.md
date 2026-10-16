@@ -1,28 +1,18 @@
-# airbnb-renting
+# Documentation
 
-![Databricks Runtime](https://img.shields.io/badge/Databricks%20Runtime-16.4--LTS-%231B3139)
-[![python](https://img.shields.io/badge/python-3.12-g)](https://www.python.org)
-[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Checked with ty](https://img.shields.io/badge/type%20checked-ty-261230.svg)](https://github.com/astral-sh/ty)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+These pages explain **why** the pipeline is built the way it is. The main [README](../README.md)
+covers what it does and how to run it.
 
-Airbnb vs Kamernet investment pipeline
+| Page | Read it for |
+|------|-------------|
+| [decisions.md](decisions.md) | Every significant choice, with what was rejected and why |
+| [data_quality.md](data_quality.md) | Issues found in the data, quality rules, quarantine, the postcode backfill, measured results |
+| [revenue_model.md](revenue_model.md) | How Airbnb and Kamernet are compared, scenarios, regulation, results, limitations |
+| [tooling.md](tooling.md) | Why Databricks Free Edition, SDP, bundles and the revo-dabs toolchain |
+| [development.md](development.md) | Project structure, day-to-day commands, testing, deployment, gotchas |
+| [coding_standard.md](coding_standard.md) | Code style and commit conventions (from revo-dabs) |
+| [diagrams/](diagrams/) | Data flow and CI/CD (`.excalidraw` source + `.png`) |
+| [ai-sessions/](ai-sessions/) | Export of the AI-assisted working session(s) |
 
-## Quick Start
-
-- **[Getting Started](getting_started.md)** - Set up your development environment
-
-## Development
-
-- **[Development](development.md)** - Project structure, configuration, code quality, and (testing on) Databricks Connect
-- **[Bundle Deployment](bundle_deployment.md)** - Declarative Automation Bundle deployment, Git strategy, and CI/CD
-
-## Appendices
-
-- **[Coding Standards](coding_standard.md)** - Code style and conventions
-
-## Troubleshooting
-
-- Running `just clean` is probably a good start
-- Refer to the [Databricks documentation](https://docs.databricks.com/dev-tools/bundles/index.html) for bundle-specific questions
+Working documents from planning (brainstorm, requirements, design) are in
+[`.claude/sdd/features/`](../.claude/sdd/features/).
