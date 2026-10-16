@@ -203,3 +203,7 @@ CLAUDE.md
 !.claude/sdd/
 .claude/sdd/*
 !.claude/sdd/features/
+!.claude/sdd/reports/
+
+# Personal learning log (CLAUDE.md learning mode), not a deliverable.
+LEARNINGS.md
