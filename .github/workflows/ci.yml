@@ -32,13 +32,11 @@ jobs:
       - name: Install development environment from uv.lock
         run: uv sync --frozen
 
-      - name: Lint, format, types, docstrings
-        run: |
-          set -e
-          uv run ruff check --output-format=github .
-          uv run ruff format --check .
-          uv run ty check --output-format=github .
-          uv run pydoclint .
+      # Run exactly the hooks developers run locally (.pre-commit-config.yaml): one definition of
+      # "clean", so local and CI checks can't drift (they did: `ruff format --check .` in CI also
+      # formatted Markdown code blocks, which the local hook never looked at).
+      - name: Pre-commit hooks (ruff, ruff-format, ty, pydoclint, hygiene)
+        run: uv run prek run --all-files --show-diff-on-failure
 
       - name: Build and validate package
         run: |
