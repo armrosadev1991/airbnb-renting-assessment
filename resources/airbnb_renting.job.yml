@@ -1,0 +1,22 @@
+# The pipeline defines the data; the job defines the workflow: refresh, then export.
+resources:
+  jobs:
+    airbnb_renting_job:
+      name: airbnb_renting_job
+      email_notifications:
+        on_failure:
+          - ${workspace.current_user.userName}
+      tasks:
+        - task_key: refresh_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.airbnb_renting.id}
+          max_retries: 1  # serverless cold starts occasionally fail transiently
+
+        - task_key: export_parquet
+          depends_on:
+            - task_key: refresh_pipeline
+          notebook_task:  # no compute block: runs on serverless
+            notebook_path: ../notebooks/export_parquet.py
+            base_parameters:
+              catalog: ${var.catalog}
+              gold_schema: ${resources.schemas.gold.name}

@@ -1,0 +1,62 @@
+bundle:
+  name: airbnb-renting
+
+include:
+  - resources/*.yml
+
+# Free Edition has a single workspace, so the host lives at the top level and both targets
+# deploy into it. Isolation comes from `mode: development`, which prefixes dev schemas and
+# resources with `dev_<user>_` / `[dev <user>]`; prod uses the plain names.
+workspace:
+  host: https://dbc-8ba385c2-1511.cloud.databricks.com
+
+# The bundle syncs the repo to the workspace (respecting .gitignore). The raw zips and the
+# local AI/SDD tooling aren't needed there: the data comes from the landing volume.
+sync:
+  exclude:
+    - data/**
+    - .claude/**
+    - CLAUDE.md
+
+artifacts:
+  platform:
+    type: whl
+    path: .
+    build: uv build
+
+variables:
+  wheel_path:
+    description: Path of the wheel file installed on serverless compute.
+    default: ${workspace.root_path}/artifacts/.internal/*.whl
+  catalog:
+    description: Unity Catalog catalog. Created once by `just bootstrap`, not owned by the bundle.
+    default: airbnb_renting
+  warehouse_id:
+    description: SQL warehouse for the dashboard (Free Edition ships one serverless warehouse).
+    lookup:
+      warehouse: Serverless Starter Warehouse
+  ci_service_principal:
+    description: Application ID of the 'github-actions-airbnb' service principal (not a secret).
+    default: e26b27ba-c842-48e9-80d9-d300a6bc30c2
+  landing_path:
+    description: Volume path where the raw files are uploaded manually (shared by all targets).
+    default: /Volumes/airbnb_renting/landing/raw
+
+targets:
+  # Personal development copy: resources prefixed with '[dev <user>]', schedules paused,
+  # pipelines in development mode (no retries, faster iteration).
+  dev:
+    mode: development
+    default: true
+
+  # Deployed by CI/CD from `main`. The template's separate 'test' target is dropped:
+  # with one workspace it would only be a third copy of the same tables.
+  prod:
+    mode: production
+    # One fixed location in the CI principal's own folder: there's only ever one prod copy, and
+    # only CI (or an admin) can write it. /Workspace/Shared would be writable by every user.
+    workspace:
+      root_path: /Workspace/Users/${var.ci_service_principal}/.bundle/${bundle.name}/${bundle.target}
+    # Prod workloads run as the CI service principal, never as the person who last deployed.
+    run_as:
+      service_principal_name: ${var.ci_service_principal}

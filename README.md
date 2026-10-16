@@ -1,2 +1,59 @@
 # airbnb-renting
-technical assessment
+
+![Databricks Runtime](https://img.shields.io/badge/Databricks%20Runtime-16.4--LTS-%231B3139)
+[![python](https://img.shields.io/badge/python-3.12-g)](https://www.python.org)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Checked with ty](https://img.shields.io/badge/type%20checked-ty-261230.svg)](https://github.com/astral-sh/ty)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
+Airbnb vs Kamernet investment pipeline
+
+The `airbnb-renting` project was generated from [RevoData Declarative Automation Bundle Templates](https://github.com/revodatanl/revo-dabs) version `1.0.0`.
+
+## Prerequisites
+
+Ensure you have the following tools installed:
+
+- **[uv](https://docs.astral.sh/uv/)** - Fast Python package manager and project management
+- **[git](https://git-scm.com/)** - Version control system
+- **[Databricks CLI](https://docs.databricks.com/dev-tools/cli/index.html)** - Command-line interface for Databricks operations
+- **[just](https://just.systems/man/en/packages.html)** - Build automation tool (very convenient during development)
+
+**Platform Support**: This project is designed for **Linux**, **macOS** and **Windows**.
+
+## Quick Start
+
+Set up a fully configured development environment by running:
+
+```bash
+just
+```
+
+You may need to update the `PROFILE_NAME` variable in the `.justfile` to match your Databricks profile name.  In addition, ensure that the host URL in `databricks.yml` matches your Databricks profile URL.
+
+Additional `just` commands are available for various tasks:
+
+```bash
+just lint     # Run linting
+just test     # Run tests
+just validate # Validate bundle on default workspace
+just deploy   # Deploy bundle to default workspace
+just destroy  # Destroy bundle resources on default workspace
+```
+
+Run `just list` to see all available commands.
+
+## Documentation
+
+Comprehensive documentation can be found in the [documentation](docs/README.md).
+
+- **[Getting Started](docs/getting_started.md)** - Set up your development environment
+- **[Development](docs/development.md)** - Project structure, configuration, code quality, and (testing on) Databricks Connect
+- **[Bundle Deployment](docs/bundle_deployment.md)** - Deployment of Declarative Automation Bundles (formerly Databricks Asset Bundles), Git strategy, and CI/CD
+- **[Coding Standards](docs/coding_standard.md)** - Code style and conventions
+
+## Troubleshooting
+
+- Refer to the [Databricks documentation](https://docs.databricks.com/dev-tools/bundles/index.html) for bundle-specific questions

@@ -1,0 +1,30 @@
+# airbnb-renting
+
+![Databricks Runtime](https://img.shields.io/badge/Databricks%20Runtime-16.4--LTS-%231B3139)
+[![python](https://img.shields.io/badge/python-3.12-g)](https://www.python.org)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Checked with ty](https://img.shields.io/badge/type%20checked-ty-261230.svg)](https://github.com/astral-sh/ty)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
+Airbnb vs Kamernet investment pipeline
+
+## Quick Start
+
+- **[Getting Started](getting_started.md)** - Set up your development environment
+
+## Development
+
+- **[Development](development.md)** - Project structure, configuration, code quality, and (testing on) Databricks Connect
+- **[Bundle Deployment](bundle_deployment.md)** - Declarative Automation Bundle deployment, Git strategy, and CI/CD
+
+## Appendices
+
+- **[Coding Standards](coding_standard.md)** - Code style and conventions
+- **[WSL](wsl.md)** - Instructions for Windows Subsystem for Linux setup
+
+## Troubleshooting
+
+- Running `just clean` is probably a good start
+- Refer to the [Databricks documentation](https://docs.databricks.com/dev-tools/bundles/index.html) for bundle-specific questions

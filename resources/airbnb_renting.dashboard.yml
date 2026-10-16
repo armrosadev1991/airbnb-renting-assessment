@@ -1,0 +1,10 @@
+resources:
+  dashboards:
+    airbnb_renting_dashboard:
+      display_name: Airbnb vs Kamernet - Amsterdam
+      file_path: ./dashboards/airbnb_renting.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      # Queries use bare table names; catalog/schema come from the target, so dev and prod
+      # dashboards read their own gold tables.
+      dataset_catalog: ${var.catalog}
+      dataset_schema: ${resources.schemas.gold.name}

@@ -1,0 +1,11 @@
+zipcode,latitude,longitude,room_type,accommodates,bedrooms,price,review_scores_value
+1017,52.365,4.885,Entire home/apt,4,2.0,130,100.0
+1017,52.365,4.885,Entire home/apt,4,2.0,130,100.0
+1017 AB,52.365,4.915,Entire home/apt,2,1.0,95,90.0
+,52.365,4.912,Private room,2,1.0,59,
+1079 HH Amsterdam,52.366,4.886,Private room,1,,70,80.0
+....,52.30,4.86,Entire home/apt,3,1.0,110,90.0
+,52.0,5.5,Entire home/apt,2,1.0,100,90.0
+1183 AP,52.301,4.861,Shared room,1,1.0,40,70.0
+1017,52.364,4.884,Entire home/apt,2,1.0,9000,
+1018,52.364,4.914,Hotel room,2,1.0,150,90.0

@@ -1,0 +1,25 @@
+resources:
+  pipelines:
+    airbnb_renting:
+      name: airbnb_renting
+      catalog: ${var.catalog}
+      # Default schema; silver and gold tables use fully qualified names from `configuration`.
+      schema: ${resources.schemas.bronze.name}
+      serverless: true
+      continuous: false  # triggered: the sources are static snapshots
+      channel: CURRENT   # ST_* verified on serverless in scratch/00; PREVIEW only if needed
+      root_path: ../notebooks/pipelines/airbnb_renting
+      libraries:
+        - glob:
+            include: ../notebooks/pipelines/airbnb_renting/transformations/**
+      environment:
+        dependencies:
+          - ${var.wheel_path}  # the airbnb_renting package, built by `artifacts` (uv build)
+      configuration:
+        landing_path: ${var.landing_path}
+        bronze_schema: ${resources.schemas.bronze.name}
+        silver_schema: ${resources.schemas.silver.name}
+        gold_schema: ${resources.schemas.gold.name}
+        nights_per_month: "30"
+        low_sample_threshold: "5"
+        scenarios: '[{"name":"legal_cap_30n","nights_per_year":30,"segments":["whole_unit"]},{"name":"occ_50","occupancy":0.5},{"name":"occ_70","occupancy":0.7}]'

@@ -1,0 +1,145 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "pc4_code": "1017",
+    "gem_name": "Amsterdam",
+    "geo_point_2d": {
+     "lon": 4.89,
+     "lat": 52.365
+    }
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       4.88,
+       52.36
+      ],
+      [
+       4.9,
+       52.36
+      ],
+      [
+       4.9,
+       52.37
+      ],
+      [
+       4.88,
+       52.37
+      ],
+      [
+       4.88,
+       52.36
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "pc4_code": "1018",
+    "gem_name": "Amsterdam",
+    "geo_point_2d": {
+     "lon": 4.91,
+     "lat": 52.365
+    }
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       4.9,
+       52.36
+      ],
+      [
+       4.92,
+       52.36
+      ],
+      [
+       4.92,
+       52.37
+      ],
+      [
+       4.9,
+       52.37
+      ],
+      [
+       4.9,
+       52.36
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "pc4_code": "1183",
+    "gem_name": "Amstelveen",
+    "geo_point_2d": {
+     "lon": 4.86,
+     "lat": 52.3
+    }
+   },
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        4.85,
+        52.29
+       ],
+       [
+        4.87,
+        52.29
+       ],
+       [
+        4.87,
+        52.31
+       ],
+       [
+        4.85,
+        52.31
+       ],
+       [
+        4.85,
+        52.29
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        4.8,
+        52.29
+       ],
+       [
+        4.81,
+        52.29
+       ],
+       [
+        4.81,
+        52.3
+       ],
+       [
+        4.8,
+        52.3
+       ],
+       [
+        4.8,
+        52.29
+       ]
+      ]
+     ]
+    ]
+   }
+  }
+ ]
+}

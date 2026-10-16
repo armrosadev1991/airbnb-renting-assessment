@@ -1,0 +1,121 @@
+[
+ {
+  "_id": [
+   "id1"
+  ],
+  "city": "Amsterdam",
+  "postalCode": "1017AB",
+  "propertyType": "Room",
+  "rent": "€ 600,-  Utilities incl.",
+  "areaSqm": "14 m2",
+  "additionalCostsRaw": "NA",
+  "deposit": "\n      € 500\n  ",
+  "furnish": "Furnished",
+  "matchCapacity": "1 person",
+  "crawledAt": [
+   "2019-07-26T22:18:23.018+0000"
+  ]
+ },
+ {
+  "_id": [
+   "id2"
+  ],
+  "city": "Amsterdam",
+  "postalCode": "1018CD",
+  "propertyType": "Apartment",
+  "rent": "€ 1650,-",
+  "areaSqm": "60 m2",
+  "additionalCostsRaw": "\n   -\n ",
+  "deposit": "\n      € 500\n  ",
+  "furnish": "Furnished",
+  "matchCapacity": "1 person",
+  "crawledAt": [
+   "2019-07-26T22:18:23.018+0000"
+  ]
+ },
+ {
+  "_id": [
+   "id3"
+  ],
+  "city": "Amsterdam",
+  "postalCode": "1017EF",
+  "propertyType": "Studio",
+  "rent": "€ 1,-",
+  "areaSqm": "14 m2",
+  "additionalCostsRaw": "NA",
+  "deposit": "\n      € 500\n  ",
+  "furnish": "Furnished",
+  "matchCapacity": "1 person",
+  "crawledAt": [
+   "2019-07-26T22:18:23.018+0000"
+  ]
+ },
+ {
+  "_id": [
+   "id4"
+  ],
+  "city": "amsterdam",
+  "postalCode": "1183LK",
+  "propertyType": "Apartment",
+  "rent": "€ 2100,-  Utilities incl.",
+  "areaSqm": "14 m2",
+  "additionalCostsRaw": "NA",
+  "deposit": "\n      € 500\n  ",
+  "furnish": "Furnished",
+  "matchCapacity": "1 person",
+  "crawledAt": [
+   "2019-07-26T22:18:23.018+0000"
+  ]
+ },
+ {
+  "_id": [
+   "id5"
+  ],
+  "city": "Amsterdam",
+  "postalCode": "1018GH",
+  "propertyType": "Anti-squat",
+  "rent": "€ 300,-",
+  "areaSqm": "14 m2",
+  "additionalCostsRaw": "NA",
+  "deposit": "\n      € 500\n  ",
+  "furnish": "Furnished",
+  "matchCapacity": "1 person",
+  "crawledAt": [
+   "2019-07-26T22:18:23.018+0000"
+  ]
+ },
+ {
+  "_id": [
+   "id6"
+  ],
+  "city": "Rotterdam",
+  "postalCode": "3074HN",
+  "propertyType": "Room",
+  "rent": "€ 500,-",
+  "areaSqm": "14 m2",
+  "additionalCostsRaw": "NA",
+  "deposit": "\n      € 500\n  ",
+  "furnish": "Furnished",
+  "matchCapacity": "1 person",
+  "crawledAt": [
+   "2019-07-26T22:18:23.018+0000"
+  ]
+ },
+ {
+  "_id": [
+   "id7"
+  ],
+  "city": "Amsterdam",
+  "postalCode": "1017JK",
+  "propertyType": "Room",
+  "rent": "€ 700,-",
+  "areaSqm": "NA",
+  "additionalCostsRaw": "NA",
+  "deposit": "\n      € 500\n  ",
+  "furnish": "Furnished",
+  "matchCapacity": "1 person",
+  "crawledAt": [
+   "2019-07-26T22:18:23.018+0000"
+  ]
+ }
+]

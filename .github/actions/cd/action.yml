@@ -1,0 +1,35 @@
+name: Deploy Databricks Bundle
+description: >
+  Installs uv (the bundle's artifact build runs `uv build`) and the Databricks CLI, then deploys
+  the bundle to the requested target using service-principal OAuth credentials.
+
+inputs:
+  target:
+    description: Bundle target (dev | prod)
+    required: true
+  databricks_host:
+    description: Databricks workspace URL
+    required: true
+  databricks_client_id:
+    description: Service principal application (client) ID
+    required: true
+  databricks_client_secret:
+    description: Service principal OAuth secret
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+
+    - name: Install Databricks CLI
+      uses: databricks/setup-cli@main
+
+    - name: Deploy Databricks bundle
+      shell: bash
+      run: databricks bundle deploy --target "${{ inputs.target }}"
+      env:
+        DATABRICKS_HOST: ${{ inputs.databricks_host }}
+        DATABRICKS_CLIENT_ID: ${{ inputs.databricks_client_id }}
+        DATABRICKS_CLIENT_SECRET: ${{ inputs.databricks_client_secret }}

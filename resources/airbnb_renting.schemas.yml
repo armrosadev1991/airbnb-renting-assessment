@@ -1,0 +1,24 @@
+# Bundle-owned, per target. The landing catalog/schema/volume are NOT here on purpose:
+# they hold hand-uploaded raw files and are created once by `just bootstrap`.
+resources:
+  schemas:
+    bronze:
+      catalog_name: ${var.catalog}
+      name: bronze
+      comment: Raw copies of the sources (all strings) plus lineage columns.
+    silver:
+      catalog_name: ${var.catalog}
+      name: silver
+      comment: Typed, cleaned listings; quarantine tables; table-level DQ checks.
+    gold:
+      catalog_name: ${var.catalog}
+      name: gold
+      comment: Revenue per property, per postcode, and the Kamernet vs Airbnb comparison.
+
+  volumes:
+    exports:
+      catalog_name: ${var.catalog}
+      schema_name: ${resources.schemas.gold.name}
+      name: exports
+      volume_type: MANAGED
+      comment: Parquet exports of the gold tables (pulled into ./data/output by `just export`).

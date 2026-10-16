@@ -1,0 +1,33 @@
+name: CD
+
+# Deploy to prod on every push to main. With branch protection, pushes to main only happen
+# through merged, CI-green pull requests. Deploy only: running the job is a separate, manual
+# step (`just run prod`) because a run consumes Free Edition quota.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false  # never interrupt a deployment half-way
+
+jobs:
+  deploy_prod:
+    name: Deploy to prod
+    runs-on: ubuntu-latest
+    environment: prod  # GitHub environment holding the prod secrets (approvals optional)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy bundle
+        uses: ./.github/actions/cd
+        with:
+          target: prod
+          databricks_host: ${{ secrets.DATABRICKS_HOST }}
+          databricks_client_id: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          databricks_client_secret: ${{ secrets.DATABRICKS_CLIENT_SECRET }}

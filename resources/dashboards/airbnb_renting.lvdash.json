@@ -1,0 +1,798 @@
+{
+  "datasets": [
+    {
+      "name": "ds_comparison",
+      "displayName": "Kamernet vs Airbnb per postcode",
+      "queryLines": [
+        "SELECT CAST(pc4 AS STRING) AS postcode, segment, scenario, ",
+        "kamernet_median_rent_eur, airbnb_median_price_eur, airbnb_median_revenue_eur, ",
+        "breakeven_occupancy, winner, ",
+        "CASE WHEN winner = 'airbnb' THEN 1 ELSE 0 END AS airbnb_win, ",
+        "CASE WHEN winner = 'kamernet' THEN 1 ELSE 0 END AS kamernet_win, ",
+        "CASE WHEN low_sample THEN 'Low sample (<5 listings)' ELSE 'Reliable' END AS confidence, ",
+        "n_kamernet, n_airbnb, centroid_lat, centroid_lon ",
+        "FROM investment_comparison ",
+        "WHERE scenario IS NOT NULL ",
+        "ORDER BY breakeven_occupancy "
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "overview",
+      "displayName": "Investment overview",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Amsterdam: rent long-term (Kamernet) or short-term (Airbnb)?"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "subtitle",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Gross monthly revenue per 4-digit postcode, compared within the same property segment. Airbnb revenue depends on occupancy, so pick a scenario: `legal_cap_30n` = Amsterdam's 30-night/year cap for whole homes. Postcodes with only Kamernet listings (4) are not shown."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter-segment",
+            "queries": [
+              {
+                "name": "ds_comparison_segment",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "fields": [
+                    {
+                      "name": "segment",
+                      "expression": "`segment`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "segment",
+                    "displayName": "Segment",
+                    "queryName": "ds_comparison_segment"
+                  }
+                ]
+              },
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "STRING",
+                    "values": [
+                      {
+                        "value": "whole_unit"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Segment"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "filter-scenario",
+            "queries": [
+              {
+                "name": "ds_comparison_scenario",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "fields": [
+                    {
+                      "name": "scenario",
+                      "expression": "`scenario`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "scenario",
+                    "displayName": "Airbnb scenario",
+                    "queryName": "ds_comparison_scenario"
+                  }
+                ]
+              },
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "STRING",
+                    "values": [
+                      {
+                        "value": "legal_cap_30n"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Airbnb scenario"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "filter-confidence",
+            "queries": [
+              {
+                "name": "ds_comparison_confidence",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "fields": [
+                    {
+                      "name": "confidence",
+                      "expression": "`confidence`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "confidence",
+                    "displayName": "Confidence",
+                    "queryName": "ds_comparison_confidence"
+                  }
+                ]
+              },
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "STRING",
+                    "values": [
+                      {
+                        "value": "Reliable"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Confidence"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-airbnb-wins",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "fields": [
+                    {
+                      "name": "sum(airbnb_win)",
+                      "expression": "SUM(`airbnb_win`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(airbnb_win)",
+                  "displayName": "Postcodes where Airbnb wins"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Postcodes where Airbnb wins"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-kamernet-wins",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "fields": [
+                    {
+                      "name": "sum(kamernet_win)",
+                      "expression": "SUM(`kamernet_win`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(kamernet_win)",
+                  "displayName": "Postcodes where Kamernet wins"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Postcodes where Kamernet wins"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 4,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-breakeven",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "fields": [
+                    {
+                      "name": "avg(breakeven_occupancy)",
+                      "expression": "AVG(`breakeven_occupancy`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(breakeven_occupancy)",
+                  "displayName": "Avg occupancy Airbnb needs",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Avg occupancy Airbnb needs"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 4,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "winner-map",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "centroid_lat",
+                      "expression": "`centroid_lat`"
+                    },
+                    {
+                      "name": "centroid_lon",
+                      "expression": "`centroid_lon`"
+                    },
+                    {
+                      "name": "winner",
+                      "expression": "`winner`"
+                    },
+                    {
+                      "name": "postcode",
+                      "expression": "`postcode`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "symbol-map",
+              "encodings": {
+                "coordinates": {
+                  "latitude": {
+                    "fieldName": "centroid_lat"
+                  },
+                  "longitude": {
+                    "fieldName": "centroid_lon"
+                  }
+                },
+                "color": {
+                  "fieldName": "winner",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "airbnb",
+                        "color": "#FF7E5C"
+                      },
+                      {
+                        "value": "kamernet",
+                        "color": "#21918C"
+                      }
+                    ]
+                  },
+                  "displayName": "Winner"
+                }
+              },
+              "mark": {
+                "opacity": 0.85
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Where does each strategy win?",
+                "description": "One dot per postcode (PC4 centroid). Click a dot to filter the rest of the page."
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 6,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "breakeven-bar",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "postcode",
+                      "expression": "`postcode`"
+                    },
+                    {
+                      "name": "breakeven_occupancy",
+                      "expression": "`breakeven_occupancy`"
+                    },
+                    {
+                      "name": "winner",
+                      "expression": "`winner`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "breakeven_occupancy",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Breakeven occupancy",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "postcode",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x"
+                    }
+                  },
+                  "displayName": "Postcode"
+                },
+                "color": {
+                  "fieldName": "winner",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "airbnb",
+                        "color": "#FF7E5C"
+                      },
+                      {
+                        "value": "kamernet",
+                        "color": "#21918C"
+                      }
+                    ]
+                  },
+                  "displayName": "Winner"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Occupancy Airbnb needs to match long-term rent",
+                "description": "Kamernet median rent / (Airbnb median nightly price x 30). The legal 30-night cap allows ~8%."
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 7,
+            "width": 6,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "section-detail",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Revenue per postcode"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "revenue-per-postcode",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "postcode",
+                      "expression": "`postcode`"
+                    },
+                    {
+                      "name": "kamernet_median_rent_eur",
+                      "expression": "`kamernet_median_rent_eur`"
+                    },
+                    {
+                      "name": "airbnb_median_revenue_eur",
+                      "expression": "`airbnb_median_revenue_eur`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "mark": {
+                "layout": "group"
+              },
+              "encodings": {
+                "x": {
+                  "fieldName": "postcode",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Postcode"
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "EUR",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "kamernet_median_rent_eur",
+                      "displayName": "Kamernet median rent / month"
+                    },
+                    {
+                      "fieldName": "airbnb_median_revenue_eur",
+                      "displayName": "Airbnb median revenue / month"
+                    }
+                  ]
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Potential monthly revenue per postcode: Kamernet vs Airbnb",
+                "description": "Gross revenue, medians per postcode, for the selected segment and Airbnb scenario."
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "detail-table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds_comparison",
+                  "disaggregated": true,
+                  "fields": [
+                    {
+                      "name": "postcode",
+                      "expression": "`postcode`"
+                    },
+                    {
+                      "name": "segment",
+                      "expression": "`segment`"
+                    },
+                    {
+                      "name": "scenario",
+                      "expression": "`scenario`"
+                    },
+                    {
+                      "name": "kamernet_median_rent_eur",
+                      "expression": "`kamernet_median_rent_eur`"
+                    },
+                    {
+                      "name": "airbnb_median_price_eur",
+                      "expression": "`airbnb_median_price_eur`"
+                    },
+                    {
+                      "name": "airbnb_median_revenue_eur",
+                      "expression": "`airbnb_median_revenue_eur`"
+                    },
+                    {
+                      "name": "breakeven_occupancy",
+                      "expression": "`breakeven_occupancy`"
+                    },
+                    {
+                      "name": "winner",
+                      "expression": "`winner`"
+                    },
+                    {
+                      "name": "n_kamernet",
+                      "expression": "`n_kamernet`"
+                    },
+                    {
+                      "name": "n_airbnb",
+                      "expression": "`n_airbnb`"
+                    },
+                    {
+                      "name": "confidence",
+                      "expression": "`confidence`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "postcode",
+                    "displayName": "Postcode"
+                  },
+                  {
+                    "fieldName": "segment",
+                    "displayName": "Segment"
+                  },
+                  {
+                    "fieldName": "scenario",
+                    "displayName": "Scenario"
+                  },
+                  {
+                    "fieldName": "kamernet_median_rent_eur",
+                    "displayName": "Kamernet rent / month",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "EUR",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 0
+                      }
+                    }
+                  },
+                  {
+                    "fieldName": "airbnb_median_price_eur",
+                    "displayName": "Airbnb price / night",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "EUR",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 0
+                      }
+                    }
+                  },
+                  {
+                    "fieldName": "airbnb_median_revenue_eur",
+                    "displayName": "Airbnb revenue / month",
+                    "format": {
+                      "type": "number-currency",
+                      "currencyCode": "EUR",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 0
+                      }
+                    }
+                  },
+                  {
+                    "fieldName": "breakeven_occupancy",
+                    "displayName": "Breakeven occupancy",
+                    "format": {
+                      "type": "number-percent",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 0
+                      }
+                    }
+                  },
+                  {
+                    "fieldName": "winner",
+                    "displayName": "Winner"
+                  },
+                  {
+                    "fieldName": "n_kamernet",
+                    "displayName": "# Kamernet"
+                  },
+                  {
+                    "fieldName": "n_airbnb",
+                    "displayName": "# Airbnb"
+                  },
+                  {
+                    "fieldName": "confidence",
+                    "displayName": "Confidence"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Postcode detail (sorted by breakeven: best Airbnb opportunities first)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 24,
+            "width": 12,
+            "height": 8
+          }
+        }
+      ]
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#FCFCFC",
+        "dark": "#1F272D"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#11171C"
+      },
+      "widgetBorderColor": {
+        "light": "#FFFFFF",
+        "dark": "#11171C"
+      },
+      "fontColor": {
+        "light": "#11171C",
+        "dark": "#E8ECF0"
+      },
+      "selectionColor": {
+        "light": "#2272B4",
+        "dark": "#8ACAFF"
+      },
+      "visualizationColors": [
+        "#21918C",
+        "#FF7E5C",
+        "#3B528B",
+        "#FDE725",
+        "#5EC962",
+        "#440154",
+        "#F89441"
+      ],
+      "widgetHeaderAlignment": "LEFT"
+    }
+  }
+}

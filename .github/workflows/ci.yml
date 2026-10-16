@@ -1,0 +1,55 @@
+name: CI
+
+# Quality gate for every pull request into main. Branch protection requires this workflow,
+# so nothing reaches main (and therefore prod) without passing it.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      # Service principal (OAuth M2M): used by Databricks Connect in the tests and by
+      # `bundle validate`. Unit tests run on serverless, same engine as the pipeline.
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Install development environment from uv.lock
+        run: uv sync --frozen
+
+      - name: Lint, format, types, docstrings
+        run: |
+          set -e
+          uv run ruff check --output-format=github .
+          uv run ruff format --check .
+          uv run ty check --output-format=github .
+          uv run pydoclint .
+
+      - name: Build and validate package
+        run: |
+          set -e
+          uv build
+          tar -xzf dist/airbnb_renting-*.tar.gz
+          # Every file in src/ must be inside the sdist: catches files silently left out.
+          diff -r -x __pycache__ src airbnb_renting-*/src
+
+      - name: Unit tests (serverless via Databricks Connect, coverage gate 80%)
+        run: uv run pytest -v tests --cov=src --cov-report=term
+
+      - name: Validate Databricks bundle (prod target)
+        run: databricks bundle validate --target prod
