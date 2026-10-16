@@ -1,8 +1,10 @@
 name: CD
 
-# Deploy to prod on every push to main. With branch protection, pushes to main only happen
-# through merged, CI-green pull requests. Deploy only: running the job is a separate, manual
-# step (`just run prod`) because a run consumes Free Edition quota.
+# Deploy to prod on every push to main, but only after the full CI suite passes on that exact
+# commit. GitHub doesn't enforce branch protection on free private repos, so this `needs: ci`
+# is the technical control: a direct push to main with broken code is never deployed.
+# Deploy only: running the job is a separate, manual step (`just run prod`) because a run
+# consumes Free Edition quota.
 on:
   push:
     branches: [main]
@@ -16,8 +18,14 @@ concurrency:
   cancel-in-progress: false  # never interrupt a deployment half-way
 
 jobs:
+  ci:
+    name: CI gate
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+
   deploy_prod:
     name: Deploy to prod
+    needs: ci
     runs-on: ubuntu-latest
     environment: prod  # GitHub environment holding the prod secrets (approvals optional)
     steps:
